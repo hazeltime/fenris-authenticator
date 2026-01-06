@@ -289,4 +289,6 @@ class Vault(
 
 fun TotpAlgorithm.toHmacAlgorithm(): HmacAlgorithm = when (this) {
     TotpAlgorithm.SHA1 -> HmacAlgorithm.SHA1
+    TotpAlgorithm.SHA256 -> HmacAlgorithm.SHA256
+    TotpAlgorithm.SHA512 -> HmacAlgorithm.SHA512
 }

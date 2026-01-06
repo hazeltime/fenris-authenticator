@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import se.koditoriet.snout.SnoutApp
 import se.koditoriet.snout.Config
 import se.koditoriet.snout.Config.BackupKeys
@@ -23,6 +27,7 @@ import se.koditoriet.snout.crypto.KeyHandle
 import se.koditoriet.snout.crypto.KeySecurityLevel
 import se.koditoriet.snout.crypto.SymmetricAlgorithm
 import se.koditoriet.snout.vault.NewTotpSecret
+import se.koditoriet.snout.vault.TotpAlgorithm
 import se.koditoriet.snout.vault.TotpSecret
 import se.koditoriet.snout.vault.Vault
 import java.lang.Exception
@@ -110,6 +115,23 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
         app.contentResolver.openOutputStream(uri)!!.use { stream ->
             stream.write(vault.export().encode().toByteArray())
         }
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    suspend fun importFromFile(uri: Uri): Unit = mutex.withLock {
+        check(config.first().enableDeveloperFeatures) {
+            "tried to use developer feature without being a developer"
+        }
+        check(vault.state == Vault.State.Unlocked)
+        app.contentResolver.openInputStream(uri)!!.use { stream ->
+            // Only JSON supported for now
+            Json.decodeFromStream<Map<String, JsonImportItem>>(stream).forEach {
+                val account = it.value.toNewTotpSecret(it.key)
+                vault.addTotpSecret(account)
+                account.secretData.secret.fill('\u0000')
+            }
+        }
+        reloadSecrets()
     }
 
     suspend fun restoreVaultFromBackup(backupSeed: BackupSeed, uri: Uri): Unit = mutex.withLock {
@@ -222,6 +244,12 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    suspend fun setEnableDeveloperFeatures(enableDeveloperFeatures: Boolean) = mutex.withLock {
+        configDatastore.updateData {
+            it.copy(enableDeveloperFeatures = enableDeveloperFeatures)
+        }
+    }
+
     suspend fun rekeyVault(requireAuthentication: Boolean) = mutex.withLock {
         check(vault.state == Vault.State.Unlocked)
         val dbKey = CipherAuthenticator.withReason(
@@ -247,11 +275,33 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 }
 
-
 data class SecurityReport(
     val backupKeyStatus: KeySecurityLevel?,
     val secretsStatus: Map<KeySecurityLevel, Int>,
 ) {
     val totalSecrets: Int
         get() = secretsStatus.values.sum()
+}
+
+@Serializable
+class JsonImportItem(
+    val secret: String,
+    val account: String? = null,
+    val digits: Int = 6,
+    val period: Int = 30,
+    val algorithm: TotpAlgorithm = TotpAlgorithm.SHA1,
+) {
+    fun toNewTotpSecret(issuer: String): NewTotpSecret =
+        NewTotpSecret(
+            metadata = NewTotpSecret.Metadata(
+                issuer = issuer,
+                account = account,
+            ),
+            secretData = NewTotpSecret.SecretData(
+                secret = secret.toCharArray(),
+                digits = digits,
+                period = period,
+                algorithm = algorithm,
+            )
+        )
 }

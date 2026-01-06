@@ -74,6 +74,8 @@ fun SettingsScreen(
     onScreenSecurityEnabledChange: (Boolean) ->Unit,
     hideSecretsFromAccessibility: Boolean,
     onHideSecretsFromAccessibilityChange: (Boolean) ->Unit,
+    enableDeveloperFeatures: Boolean,
+    onEnableDeveloperFeaturesChange: (Boolean) ->Unit,
     onWipeVault: () -> Unit,
     onExport: (Uri) -> Unit,
     getSecurityReport: suspend () -> SecurityReport,
@@ -190,6 +192,15 @@ fun SettingsScreen(
                     description = screenStrings.hideSecretsFromScreenReadersDescription,
                     checked = hideSecretsFromAccessibility,
                     onCheckedChange = onHideSecretsFromAccessibilityChange,
+                )
+            }
+
+            item {
+                SettingSwitchRow(
+                    title = screenStrings.enableDeveloperFeatures,
+                    description = screenStrings.enableDeveloperFeaturesDescription,
+                    checked = enableDeveloperFeatures,
+                    onCheckedChange = onEnableDeveloperFeaturesChange,
                 )
             }
 

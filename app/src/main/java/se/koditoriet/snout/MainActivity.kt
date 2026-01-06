@@ -218,6 +218,7 @@ fun MainActivity.MainScreen() {
                 ListSecretsScreen(
                     secrets = totpSecrets,
                     sortMode = config.sortMode,
+                    enableDeveloperFeatures = config.enableDeveloperFeatures,
                     hideSecretsFromAccessibility = config.hideSecretsFromAccessibility,
                     getTotpCodes = { secret ->
                         viewModel.getTotpCodes(secret, 2)
@@ -232,6 +233,7 @@ fun MainActivity.MainScreen() {
                     onSortModeChange = onIOThread { mode -> viewModel.setSortMode(mode) },
                     onEditSecretMetadata = { viewState = ViewState.EditSecretMetadata(it) },
                     onDeleteSecret = onIOThread { secret -> viewModel.deleteTotpSecret(secret) },
+                    onImportFile = onIOThread { uri -> viewModel.importFromFile(uri) },
                 )
             }
             is ViewState.AddSecret -> {
@@ -281,6 +283,8 @@ fun MainActivity.MainScreen() {
                     onProtectAccountListChange = onIOThread(viewModel::rekeyVault),
                     onScreenSecurityEnabledChange = onIOThread(viewModel::setScreenSecurity),
                     onHideSecretsFromAccessibilityChange = onIOThread(viewModel::setHideSecretsFromAccessibility),
+                    enableDeveloperFeatures = config.enableDeveloperFeatures,
+                    onEnableDeveloperFeaturesChange = onIOThread(viewModel::setEnableDeveloperFeatures),
                     onWipeVault = onIOThread(viewModel::wipeVault),
                     onExport = onIOThread(viewModel::exportVault),
                     getSecurityReport = {

@@ -18,6 +18,7 @@ data class Config(
     val sortMode: SortMode = SortMode.Manual,
     val screenSecurityEnabled: Boolean = true,
     val hideSecretsFromAccessibility: Boolean = false,
+    val enableDeveloperFeatures: Boolean = false,
 ) {
     val backupsEnabled: Boolean
         get() = backupKeys != null

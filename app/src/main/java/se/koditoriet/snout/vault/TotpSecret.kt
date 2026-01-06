@@ -66,4 +66,4 @@ data class NewTotpSecret(
         }
     }
 }
-enum class TotpAlgorithm { SHA1 }
+enum class TotpAlgorithm { SHA1, SHA256, SHA512 }

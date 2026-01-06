@@ -55,6 +55,7 @@
     <string name="secrets_add_secret_sheet_description">Choose a source to add a new account.</string>
     <string name="secrets_add_secret_sheet_scan_qr_code">Scan QR Code</string>
     <string name="secrets_add_secret_sheet_scan_image">Scan Image</string>
+    <string name="secrets_add_secret_sheet_import_file">Import File</string>
     <string name="secrets_add_secret_sheet_enter_manually">Enter Manually</string>
 
     <string name="secrets_actions_sheet_no_account">(N/A)</string>
@@ -91,6 +92,9 @@
 
     <string name="settings_hide_secrets_from_screen_readers">Hide secrets from screen readers</string>
     <string name="settings_hide_secrets_from_screen_readers_description">Don’t read secret values like one-time codes and setup keys out loud. This reduces the risk of data capture, but may make it harder to use the app with accessibility tools.</string>
+
+    <string name="settings_enable_developer_options">Enable developer features</string>
+    <string name="settings_enable_developer_options_description">Enable access to advanced, unpolished, unfinished, and potentially dangerous features.</string>
 
     <string name="settings_key_storage_overview">Key storage overview</string>
     <string name="settings_key_storage_overview_description">Get an overview of the security of your vault.</string>

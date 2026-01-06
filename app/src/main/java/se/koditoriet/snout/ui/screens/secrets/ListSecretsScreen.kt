@@ -1,5 +1,6 @@
 package se.koditoriet.snout.ui.screens.secrets
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -75,12 +76,14 @@ import kotlin.time.Clock
 fun ListSecretsScreen(
     secrets: List<TotpSecret>,
     sortMode: SortMode,
+    enableDeveloperFeatures: Boolean,
     hideSecretsFromAccessibility: Boolean,
     getTotpCodes: suspend (TotpSecret) -> List<String>,
     onLockVault: () -> Unit,
     onSettings: () -> Unit,
     onAddSecretByQR: () -> Unit,
     onAddSecret: (NewTotpSecret?) -> Unit,
+    onImportFile: (Uri) -> Unit,
     onSortModeChange: (SortMode) -> Unit,
     onEditSecretMetadata: (TotpSecret) -> Unit,
     onDeleteSecret: (TotpSecret) -> Unit,
@@ -142,6 +145,7 @@ fun ListSecretsScreen(
                 when (viewState) {
                     SheetViewState.AddSecrets -> {
                         AddSecretsSheet(
+                            enableFileImport = enableDeveloperFeatures,
                             onAddSecretByQR = {
                                 onAddSecretByQR()
                                 sheetViewState = null
@@ -150,6 +154,10 @@ fun ListSecretsScreen(
                                 onAddSecret(it)
                                 sheetViewState = null
                             },
+                            onImportFile = {
+                                onImportFile(it)
+                                sheetViewState = null
+                            }
                         )
                     }
                     is SheetViewState.SecretActions -> {

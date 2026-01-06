@@ -79,7 +79,8 @@ enum class HmacAlgorithm(
     val keyStoreDigestName: String,
 ) : KeyAlgorithm {
     SHA1(KeyProperties.KEY_ALGORITHM_HMAC_SHA1, KeyProperties.DIGEST_SHA1),
-    SHA256(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, KeyProperties.DIGEST_SHA256);
+    SHA256(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, KeyProperties.DIGEST_SHA256),
+    SHA512(KeyProperties.KEY_ALGORITHM_HMAC_SHA512, KeyProperties.DIGEST_SHA512);
 
     override val secretKeySpecName: String
         get() = algorithmName

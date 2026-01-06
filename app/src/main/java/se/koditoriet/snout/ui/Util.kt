@@ -30,3 +30,8 @@ val supportedImageMimeTypes: Array<String> = arrayOf(
     "image/bmp",
     "image/tiff",
 )
+
+val supportedImportFileTypes: Array<String> = arrayOf(
+    "application/json",
+    "application/octet-stream",
+)

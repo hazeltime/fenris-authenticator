@@ -71,6 +71,7 @@ class AppStrings(private val ctx: Context) {
         val addSecretSheetDescription by ctx.s(R.string.secrets_add_secret_sheet_description)
         val addSecretSheetScanQrCode by ctx.s(R.string.secrets_add_secret_sheet_scan_qr_code)
         val addSecretSheetScanImage by ctx.s(R.string.secrets_add_secret_sheet_scan_image)
+        val addSecretSheetImportFile by ctx.s(R.string.secrets_add_secret_sheet_import_file)
         val addSecretSheetEnterManually by ctx.s(R.string.secrets_add_secret_sheet_enter_manually)
 
         val actionsSheetNoAccount by ctx.s(R.string.secrets_actions_sheet_no_account)
@@ -124,6 +125,11 @@ class AppStrings(private val ctx: Context) {
             ctx.s(R.string.settings_hide_secrets_from_screen_readers)
         val hideSecretsFromScreenReadersDescription by
             ctx.s(R.string.settings_hide_secrets_from_screen_readers_description)
+
+        val enableDeveloperFeatures by
+            ctx.s(R.string.settings_enable_developer_options)
+        val enableDeveloperFeaturesDescription by
+            ctx.s(R.string.settings_enable_developer_options_description)
 
         val keyStorageOverview by
             ctx.s(R.string.settings_key_storage_overview)

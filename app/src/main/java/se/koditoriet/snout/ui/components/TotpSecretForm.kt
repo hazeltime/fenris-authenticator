@@ -56,6 +56,7 @@ inline fun <reified T : TotpSecretFormResult> TotpSecretForm(
     val formStrings = appStrings.totpSecretForm
     var issuer by remember { mutableStateOf(metadata?.issuer ?: "") }
     var account by remember { mutableStateOf(metadata?.account ?: "") }
+    var secretDataFormState by remember { mutableStateOf(SecretDataFormState()) }
 
     val fieldModifier = Modifier
         .fillMaxWidth()
@@ -81,10 +82,22 @@ inline fun <reified T : TotpSecretFormResult> TotpSecretForm(
             label = { Text(formStrings.userName) },
         )
 
+        // TODO: this part is _really_ ugly...
         val metadataIsValid = issuer.isNotBlank()
         val (secretDataIsValid, saveData) = if (T::class == TotpSecretFormResult.TotpSecret::class) {
-            secretDataPartialForm(fieldModifier, hideSecretsFromAccessibility) {
-                onSave(it as T)
+            SecretDataPartialForm(
+                fieldModifier = fieldModifier,
+                hideSecretsFromAccessibility = hideSecretsFromAccessibility,
+                secretDataFormState = secretDataFormState,
+                onChange = { secretDataFormState = it },
+            )
+            Pair(secretDataFormState.isValid) { metadata: NewTotpSecret.Metadata ->
+                val newTotpSecret = NewTotpSecret(
+                    metadata = metadata,
+                    secretData = secretDataFormState.toSecretData(),
+                )
+                val result = TotpSecretFormResult.TotpSecret(newTotpSecret)
+                onSave(result as T)
             }
         } else {
             Pair(true) { metadata: NewTotpSecret.Metadata ->
@@ -112,19 +125,15 @@ inline fun <reified T : TotpSecretFormResult> TotpSecretForm(
 }
 
 @Composable
-fun secretDataPartialForm(
+fun SecretDataPartialForm(
     fieldModifier: Modifier,
     hideSecretsFromAccessibility: Boolean,
-    onSave: (TotpSecretFormResult.TotpSecret) -> Unit,
-): Pair<Boolean, (NewTotpSecret.Metadata) -> Unit> {
+    secretDataFormState: SecretDataFormState,
+    onChange: (SecretDataFormState) -> Unit,
+) {
     val screenStrings = appStrings.totpSecretForm
-    var secret by remember { mutableStateOf("") }
-    var digits by remember { mutableStateOf("6") }
-    var period by remember { mutableStateOf("30") }
-    var selectedAlgorithm by remember { mutableStateOf(TotpAlgorithm.SHA1) }
-    var secretVisibility by remember { mutableStateOf(SecretVisibility.Hidden) }
+    var secretVisibility by remember { mutableStateOf(Hidden) }
 
-    val secretIsValid = secret.isNotBlank() and isValidBase32(secret)
     val accessibilityManager = LocalContext
         .current
         .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -150,10 +159,10 @@ fun secretDataPartialForm(
                 hideFromAccessibility()
             }
         },
-        value = secret,
-        onValueChange = { secret = it.trim() },
+        value = secretDataFormState.secret,
+        onValueChange = { onChange(secretDataFormState.copy(secret = it.trim())) },
         label = { Text(screenStrings.secret) },
-        isError = !secretIsValid,
+        isError = !secretDataFormState.secretIsValid,
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
@@ -167,43 +176,26 @@ fun secretDataPartialForm(
     )
     OutlinedTextField(
         modifier = fieldModifier,
-        value = digits,
-        onValueChange = { digits = it.filter { c -> c.isDigit() } },
+        value = secretDataFormState.digits,
+        onValueChange = { onChange(secretDataFormState.copy(digits = it.filter { c -> c.isDigit() })) },
         label = { Text(screenStrings.digits) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        isError = digits.isBlank(),
+        isError = !secretDataFormState.digitsIsValid,
     )
     OutlinedTextField(
         modifier = fieldModifier,
-        value = period,
-        onValueChange = { period = it.filter { c -> c.isDigit() } },
+        value = secretDataFormState.period,
+        onValueChange = { onChange(secretDataFormState.copy(period = it.filter { c -> c.isDigit() })) },
         label = { Text(screenStrings.period) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        isError = period.isBlank(),
+        isError = !secretDataFormState.periodIsValid,
     )
     Dropdown<TotpAlgorithm>(
         label = screenStrings.algorithm,
-        selectedItem = selectedAlgorithm,
+        selectedItem = secretDataFormState.algorithm,
         modifier = fieldModifier,
-        onItemSelected = { selectedAlgorithm = it },
+        onItemSelected = { onChange(secretDataFormState.copy(algorithm = it)) },
     )
-    val inputs = listOf(
-        secretIsValid,
-        digits.isNotBlank(),
-        period.isNotBlank(),
-    )
-    return Pair(inputs.all { it }) { metadata: NewTotpSecret.Metadata ->
-        val secretData = NewTotpSecret.SecretData(
-            secret = secret.toCharArray(),
-            digits = digits.toInt(),
-            period = period.toInt(),
-            algorithm = selectedAlgorithm,
-        )
-        val secret = TotpSecretFormResult.TotpSecret(
-            NewTotpSecret(metadata, secretData)
-        )
-        onSave(secret)
-    }
 }
 
 sealed interface TotpSecretFormResult {
@@ -242,4 +234,31 @@ private fun SecretVisibility.TrailingIcon(onClick: () -> Unit) {
             contentDescription = iconDescription(),
         )
     }
+}
+
+data class SecretDataFormState(
+    val secret: String = "",
+    val digits: String = "6",
+    val period: String = "30",
+    val algorithm: TotpAlgorithm = TotpAlgorithm.SHA1,
+) {
+    val secretIsValid: Boolean
+        get() = secret.isNotBlank() && isValidBase32(secret)
+
+    val digitsIsValid: Boolean
+        get() = digits.toIntOrNull()?.let { it > 0 } ?: false
+
+    val periodIsValid: Boolean
+        get() = period.toIntOrNull()?.let { it > 0 } ?: false
+
+    val isValid: Boolean
+        get() = secretIsValid && digitsIsValid && periodIsValid
+
+    fun toSecretData(): NewTotpSecret.SecretData =
+        NewTotpSecret.SecretData(
+            secret = secret.toCharArray(),
+            digits = digits.toInt(),
+            period = period.toInt(),
+            algorithm = algorithm,
+        )
 }

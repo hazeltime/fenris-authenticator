@@ -130,11 +130,16 @@
 
 
     <!-- View model -->
-    <string name="view_model_auth_create_vault">Authenticate to create vault</string>
-    <string name="view_model_auth_unlock_vault">Authenticate to unlock vault</string>
-    <string name="view_model_auth_reveal_code">Authenticate to reveal code</string>
-    <string name="view_model_auth_vault_bioprompt_enable">Authenticate to enable vault biometric prompt</string>
-    <string name="view_model_auth_vault_bioprompt_disable">Authenticate to disable vault biometric prompt</string>
+    <string name="view_model_auth_create_vault">Create Vault</string>
+    <string name="view_model_auth_create_vault_subtitle">Confirm your identity to create vault.</string>
+    <string name="view_model_auth_unlock_vault">Unlock Vault</string>
+    <string name="view_model_auth_unlock_vault_subtitle">Confirm your identity to unlock vault.</string>
+    <string name="view_model_auth_reveal_code">Reveal Code</string>
+    <string name="view_model_auth_reveal_code_subtitle">Confirm your identity to reveal code.</string>
+    <string name="view_model_auth_vault_bioprompt_enable">Enable Biometric Prompt</string>
+    <string name="view_model_auth_vault_bioprompt_enable_subtitle">Confirm your identity to unlock vault with biometrics.</string>
+    <string name="view_model_auth_vault_bioprompt_disable">Disable Biometric Prompt</string>
+    <string name="view_model_auth_vault_bioprompt_disable_subtitle">Confirm your identity to unlock vault without biometrics.</string>
     <string name="view_model_auth_default_reason">Authenticate</string>
     <string name="view_model_auth_default_subtitle">Confirm your identity</string>
 </resources>

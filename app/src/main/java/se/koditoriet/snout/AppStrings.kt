@@ -183,14 +183,25 @@ class AppStrings(private val ctx: Context) {
 
     class ViewModel(private val ctx: Context) {
         val authCreateVault by ctx.s(R.string.view_model_auth_create_vault)
+        val authCreateVaultSubtitle by ctx.s(R.string.view_model_auth_create_vault_subtitle)
+
         val authUnlockVault by ctx.s(R.string.view_model_auth_unlock_vault)
+        val authUnlockVaultSubtitle by ctx.s(R.string.view_model_auth_unlock_vault_subtitle)
+
         val authRevealCode by ctx.s(R.string.view_model_auth_reveal_code)
+        val authRevealCodeSubtitle by ctx.s(R.string.view_model_auth_reveal_code_subtitle)
+
         val authDefaultReason by ctx.s(R.string.view_model_auth_default_reason)
         val authDefaultSubtitle by ctx.s(R.string.view_model_auth_default_subtitle)
 
         fun authToggleBioprompt(active: Boolean) = when (active) {
             true -> R.string.view_model_auth_vault_bioprompt_enable
             false -> R.string.view_model_auth_vault_bioprompt_disable
+        }.let { ctx.getString(it) }
+
+        fun authToggleBiopromptSubtitle(active: Boolean) = when (active) {
+            true -> R.string.view_model_auth_vault_bioprompt_enable_subtitle
+            false -> R.string.view_model_auth_vault_bioprompt_disable_subtitle
         }.let { ctx.getString(it) }
     }
 }

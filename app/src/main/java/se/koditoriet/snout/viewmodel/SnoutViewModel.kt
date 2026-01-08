@@ -72,7 +72,7 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
         Log.i(TAG, "Creating vault; enable backups: ${backupSeed != null}")
         val (dbKey, backupKeys) = CipherAuthenticator.withReason(
             reason = strings.authCreateVault,
-            subtitle = strings.authDefaultSubtitle,
+            subtitle = strings.authCreateVaultSubtitle,
         ) {
             vault.create(
                 requiresAuthentication = config.first().protectAccountList,
@@ -113,7 +113,7 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
         check(config.encryptedDbKey != null)
         CipherAuthenticator.withReason(
             reason = strings.authUnlockVault,
-            subtitle = strings.authDefaultSubtitle,
+            subtitle = strings.authUnlockVaultSubtitle,
         ) {
             vault.unlock(config.encryptedDbKey, config.backupKeys?.toVaultBackupKeys())
         }
@@ -156,7 +156,7 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
             }
             val (dbKey, backupKeys) = CipherAuthenticator.withReason(
                 reason = strings.authCreateVault,
-                subtitle = strings.authDefaultSubtitle,
+                subtitle = strings.authCreateVaultSubtitle,
             ) {
                 Log.d(TAG, "Creating vault")
                 vault.create(
@@ -212,7 +212,7 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
             check(vault.state == Vault.State.Unlocked)
             CipherAuthenticator.withReason(
                 reason = strings.authRevealCode,
-                subtitle = strings.authDefaultSubtitle,
+                subtitle = strings.authRevealCodeSubtitle,
             ) {
                 vault.getTotpCodes(totpSecret, clock::now, codes)
             }
@@ -281,7 +281,7 @@ class SnoutViewModel(private val app: Application) : AndroidViewModel(app) {
         Log.i(TAG, "Rekeying vault")
         val dbKey = CipherAuthenticator.withReason(
             reason = strings.authToggleBioprompt(requireAuthentication),
-            subtitle = strings.authDefaultSubtitle,
+            subtitle = strings.authToggleBiopromptSubtitle(requireAuthentication),
         ) {
             vault.rekey(requireAuthentication)
         }

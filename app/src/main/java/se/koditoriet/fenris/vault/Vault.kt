@@ -30,6 +30,7 @@ import se.koditoriet.fenris.viewmodel.SecurityReport
 import java.io.File
 import java.security.SecureRandom
 import java.security.interfaces.ECPublicKey
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
@@ -46,6 +47,7 @@ class Vault(
     private val cryptographer: Cryptographer,
     private val dbFile: Lazy<File>,
     private val secureRandom: SecureRandom = SecureRandom(),
+    private val clock: Clock = Clock.System,
 ) {
     private val _state = MutableStateFlow(
         if (!cryptographer.isInitialized()) {
@@ -136,6 +138,7 @@ class Vault(
             keyAlias = keyPairInfo.keyHandle.alias,
             publicKey = keyPairInfo.publicKey.toBase64Url(),
             encryptedBackupPrivateKey = keyPairInfo.encryptedPrivateKey?.encode(),
+            timeOfCreation = clock.now().toEpochMilliseconds()
         )
         passkeys.insert(passkey)
         Pair(credentialId, keyPairInfo.publicKey)
@@ -193,6 +196,7 @@ class Vault(
             algorithm = newSecret.secretData.algorithm,
             keyAlias = keyHandle.alias,
             encryptedBackupSecret = encryptedSecret,
+            timeOfCreation = clock.now().toEpochMilliseconds(),
         )
         secrets.insert(secret)
     }

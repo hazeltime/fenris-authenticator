@@ -308,6 +308,8 @@ class Vault(
     }
 
     suspend fun eraseBackups(): Unit = requireUnlocked { unlockState ->
+        Log.w(TAG, "Erasing backup keys and encrypted backup data from database. " +
+            "Previously exported backup files on the filesystem are NOT deleted.")
         unlockState.backupKeys?.let {
             cryptographer.deleteKey(it.metadataBackupKey)
             cryptographer.deleteKey(it.secretsBackupKey)

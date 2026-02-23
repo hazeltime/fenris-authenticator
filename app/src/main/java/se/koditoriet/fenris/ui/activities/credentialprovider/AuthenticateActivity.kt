@@ -45,6 +45,10 @@ class AuthenticateActivity : FragmentActivity() {
     private val viewModel by viewModels<CredentialProviderViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+            android.view.WindowManager.LayoutParams.FLAG_SECURE
+        )
         val screenStrings = appStrings.credentialProvider
         val authFactory = BiometricPromptAuthenticator.Factory(this@AuthenticateActivity)
         val clock: Clock = Clock.System

@@ -70,8 +70,18 @@ class SettingsViewModel(private val app: Application) : ViewModelBase(app) {
 
     fun onExportVault(uri: Uri) = withVault {
         Log.i(TAG, "Exporting backup to $uri")
-        app.contentResolver.openOutputStream(uri)!!.use { stream ->
-            stream.write(export().encode().toByteArray())
+        try {
+            app.contentResolver.openOutputStream(uri)!!.use { stream ->
+                stream.write(export().encode().toByteArray())
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Export failed, cleaning up partial file", e)
+            try {
+                app.contentResolver.delete(uri, null, null)
+            } catch (deleteError: Exception) {
+                Log.w(TAG, "Failed to delete partial export file", deleteError)
+            }
+            throw e
         }
     }
 

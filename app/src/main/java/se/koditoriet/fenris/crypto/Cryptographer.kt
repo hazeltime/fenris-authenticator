@@ -379,7 +379,8 @@ private fun <T : KeyAlgorithm> KeyStore.importKey(
             "Key ${keyHandle.alias} successfully stored in StrongBox",
         )
         return updatedKeyHandle
-    } catch (_: KeyStoreException) {
+    } catch (e: KeyStoreException) {
+        Log.w(TAG, "StrongBox unavailable, falling back to TEE/software keystore", e)
         val updatedKeyHandle = keyHandle.copy(isStrongBoxBacked = false)
         Log.i(
             TAG,

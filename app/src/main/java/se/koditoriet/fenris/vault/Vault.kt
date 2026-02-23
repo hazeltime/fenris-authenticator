@@ -340,7 +340,7 @@ class Vault(
     suspend fun rekeyBackups(
         oldBackupSeed: BackupSeed,
         newBackupSeed: BackupSeed,
-    ): Unit = requireUnlocked { unlockState ->
+    ): BackupKeys = requireUnlocked { unlockState ->
         Log.i(TAG, "Rekeying backup secrets")
         val oldBackupSecretKey = oldBackupSeed.deriveBackupSecretKey()
         val newBackupKeys = newBackupSeed.let {
@@ -386,6 +386,7 @@ class Vault(
             }
         }
         oldBackupSecretKey.fill(0)
+        newBackupKeys
     }
 
     suspend fun export(): EncryptedData = requireUnlocked { unlockState ->

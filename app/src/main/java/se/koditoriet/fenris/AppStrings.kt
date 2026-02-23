@@ -256,6 +256,10 @@ class AppStrings(private val ctx: Context) {
         val showSecret by ctx.s(R.string.secret_form_show_secret)
         val hideSecret by ctx.s(R.string.secret_form_hide_secret)
         val currentlyUnusableWithScreenReader by ctx.s(R.string.secret_form_currently_unusable_with_screen_reader)
+        val errorIssuerRequired by ctx.s(R.string.secret_form_error_issuer_required)
+        val errorSecretInvalid by ctx.s(R.string.secret_form_error_secret_invalid)
+        val errorDigitsInvalid by ctx.s(R.string.secret_form_error_digits_invalid)
+        val errorPeriodInvalid by ctx.s(R.string.secret_form_error_period_invalid)
     }
 
     class ViewModel(private val ctx: Context) {

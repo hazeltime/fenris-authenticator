@@ -195,6 +195,10 @@
     <string name="secret_form_hide_secret">Hide secret</string>
     <string name="secret_form_currently_unusable_with_screen_reader">Secret entry is currently configured to be hidden from screen readers. Turn off “Hide secrets from screen readers” in settings to enter secret using voice navigation, or use QR scan or file import instead.</string>
 
+    <string name="secret_form_error_issuer_required">Issuer is required</string>
+    <string name="secret_form_error_secret_invalid">A valid Base32 secret is required</string>
+    <string name="secret_form_error_digits_invalid">Enter a valid number of digits</string>
+    <string name="secret_form_error_period_invalid">Enter a valid period in seconds</string>
 
     <!-- View model -->
     <string name="view_model_auth_use_passkey">Sign In</string>

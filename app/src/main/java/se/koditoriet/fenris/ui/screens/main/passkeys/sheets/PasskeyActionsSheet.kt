@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import se.koditoriet.fenris.appStrings
 import se.koditoriet.fenris.ui.components.PasskeyIcon
@@ -33,5 +34,6 @@ fun PasskeyActionsSheet(
         icon = Icons.Default.DeleteForever,
         text = screenStrings.actionsSheetDelete,
         onClick = { onDeletePasskey(passkey) },
+        color = MaterialTheme.colorScheme.error,
     )
 }

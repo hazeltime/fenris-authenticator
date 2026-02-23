@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import se.koditoriet.fenris.ui.components.sheet.BottomSheetItem
 import se.koditoriet.fenris.ui.theme.SPACING_L
@@ -14,19 +15,20 @@ import se.koditoriet.fenris.ui.theme.SPACING_L
 fun BottomSheetAction(
     icon: ImageVector,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    color: Color? = null,
 ) {
     BottomSheetItem(modifier = Modifier.clickable(onClick = onClick)) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = color ?: MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.width(SPACING_L))
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = color ?: MaterialTheme.colorScheme.onSurface,
         )
     }
 }

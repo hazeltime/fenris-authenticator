@@ -51,6 +51,9 @@ private class UnlockingAuthenticator(
     private val releaseLock: suspend () -> Unit,
 ) : Authenticator {
     override suspend fun authenticate() {
+        // NOTE(BUG-09): The lock is released during biometric authentication to avoid
+        // blocking other vault operations. After re-acquiring the lock, the vault
+        // state should be re-verified by the caller as it may have changed.
         releaseLock()
         try {
             authenticator.authenticate()
@@ -60,6 +63,9 @@ private class UnlockingAuthenticator(
     }
 
     override suspend fun authenticate(sig: Signature): Signature {
+        // NOTE(BUG-09): The lock is released during biometric authentication to avoid
+        // blocking other vault operations. After re-acquiring the lock, the vault
+        // state should be re-verified by the caller as it may have changed.
         releaseLock()
         try {
             return authenticator.authenticate(sig)

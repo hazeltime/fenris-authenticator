@@ -36,6 +36,9 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
 
+            // TODO(UX-08): ABI filters restrict to arm64-v8a only, which blocks
+            // x86/x86_64 emulators. Consider adding debug-only x86_64 ABI support:
+            // if (buildType == "debug") abiFilters.addAll(listOf("arm64-v8a", "x86_64"))
             ndk {
                 abiFilters.add("arm64-v8a")
                 debugSymbolLevel = "none"

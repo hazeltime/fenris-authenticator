@@ -84,6 +84,6 @@ fun createPendingIntent(context: Context, cls: Class<*>, extra: Bundle? = null):
             context,
             Random.nextInt(),
             this,
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
     }

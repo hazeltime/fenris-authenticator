@@ -32,7 +32,7 @@ interface Passkeys {
             FROM (
                 SELECT
                     credentialId,
-                    ROW_NUMBER() OVER (ORDER BY sortOrder) AS rn
+                    ROW_NUMBER() OVER (ORDER BY sortOrder, credentialId) AS rn
                 FROM passkeys
             ) AS ordered
             WHERE ordered.credentialId = passkeys.credentialId

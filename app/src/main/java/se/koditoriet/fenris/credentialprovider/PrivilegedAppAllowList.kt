@@ -1,5 +1,9 @@
 package se.koditoriet.fenris.credentialprovider
 
+// TODO(ARCH-06): Browser allowlist is hardcoded as source code. Consider:
+// 1. Move to assets/JSON or resource XML for easier updates without recompilation
+// 2. Implement Digital Asset Links (assetlinks.json) verification as the primary
+//    trust mechanism, falling back to the static list for known browsers
 val privilegedAllowlist = """
 {
   "apps": [

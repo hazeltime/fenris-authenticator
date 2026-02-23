@@ -37,11 +37,16 @@ class SettingsViewModel(private val app: Application) : ViewModelBase(app) {
             ) {
                 rekey(it, enabled)
             }
-            configDatastore.updateData {
-                it.copy(
-                    encryptedDbKey = dbKey,
-                    protectAccountList = enabled,
-                )
+            try {
+                configDatastore.updateData {
+                    it.copy(
+                        encryptedDbKey = dbKey,
+                        protectAccountList = enabled,
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to persist new DB key to config — vault may be inaccessible", e)
+                throw e
             }
         }
     }

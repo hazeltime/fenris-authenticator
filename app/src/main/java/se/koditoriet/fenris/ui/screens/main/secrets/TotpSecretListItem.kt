@@ -138,6 +138,15 @@ class TotpSecretListItem(
 
     @Composable
     override fun RowScope.Render() {
+        LaunchedEffect(Unit) {
+            val periodMs = totpSecret.period * 1000L
+            while (true) {
+                val msIntoPeriod = clock.now().toEpochMilliseconds() % periodMs
+                progress = 1f - msIntoPeriod.toFloat() / periodMs.toFloat()
+                delay(100)
+            }
+        }
+
         LaunchedEffect(viewState) {
             animateTimerProgressbar()
         }
@@ -161,14 +170,12 @@ class TotpSecretListItem(
             }
         }
 
-        if (viewState is ListRowViewState.CodeVisible) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(PADDING_S)
-                    .size(36.dp),
-                progress = { progress },
-            )
-        }
+        CircularProgressIndicator(
+            modifier = Modifier
+                .padding(PADDING_S)
+                .size(36.dp),
+            progress = { progress },
+        )
     }
 
     private suspend fun animateTimerProgressbar() {
@@ -180,13 +187,11 @@ class TotpSecretListItem(
                 val deciSecondsIntoPeriod = (now.epochSeconds % totpSecret.period) * 10
                 val deciSecondsPeriod = totpSecret.period * 10
                 for (step in deciSecondsIntoPeriod..deciSecondsPeriod) {
-                    progress = 1 - step.toFloat() / deciSecondsPeriod
                     delay(100)
                 }
             }
             viewState = ListRowViewState.CodeHidden
             totpCode = dots
-            progress = 0.0f
         }
     }
 

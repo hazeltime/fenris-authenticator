@@ -27,6 +27,7 @@ fun HmacContext.generateTotpCode(
 }
 
 private fun encodeTime(time: Instant, timeStep: Int): ByteArray {
+    require(timeStep > 0) { "TOTP time step must be positive, got $timeStep" }
     var timeVal = time.epochSeconds / timeStep
     val timeBytes = ByteArray(8)
     for (i in 7 downTo 0) {

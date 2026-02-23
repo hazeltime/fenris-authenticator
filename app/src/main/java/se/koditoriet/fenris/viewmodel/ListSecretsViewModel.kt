@@ -75,8 +75,10 @@ private class JsonImportItem(
     val period: Int = 30,
     val algorithm: TotpAlgorithm = TotpAlgorithm.SHA1,
 ) {
-    fun toNewTotpSecret(issuer: String): NewTotpSecret =
-        NewTotpSecret(
+    fun toNewTotpSecret(issuer: String): NewTotpSecret {
+        require(period > 0) { "TOTP period must be positive, got $period" }
+        require(digits in 1..9) { "TOTP digits must be between 1 and 9, got $digits" }
+        return NewTotpSecret(
             metadata = NewTotpSecret.Metadata(
                 issuer = issuer,
                 account = account,
@@ -88,4 +90,5 @@ private class JsonImportItem(
                 algorithm = algorithm,
             )
         )
+    }
 }

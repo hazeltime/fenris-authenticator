@@ -1,3 +1,7 @@
+// TODO(ARCH-04): Replace manual CBOR byte-array construction with a
+// dedicated CBOR library (e.g., cbor-java or kotlinx.serialization-cbor).
+// Manual byte manipulation is error-prone and hard to maintain for
+// complex WebAuthn/FIDO2 response structures.
 package se.koditoriet.fenris.credentialprovider.webauthn
 
 import androidx.credentials.provider.CallingAppInfo

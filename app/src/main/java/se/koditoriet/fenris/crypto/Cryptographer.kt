@@ -403,6 +403,9 @@ private fun <T : KeyAlgorithm> KeyStore.importKey(
 
 // Generated using the following command line:
 // openssl req -new -x509 -key dummy.key -out dummy.crt -days 3650 -subj "/CN=dummy"
+// TODO(SEC-17): Certificate expires January 2036. After this date, Keystore
+// will reject imports of new passkey private keys. Consider extending the
+// expiry to 2099 or generating certificates dynamically with a 50-year validity.
 private val dummyCertificate: X509Certificate by lazy {
     val certBase64 = """
         MIIBdDCCARugAwIBAgIUTpBIKgyrQBlsaNIisMLiBc483QgwCgYIKoZIzj0EAwIwEDEOMAwGA1UE

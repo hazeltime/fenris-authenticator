@@ -213,7 +213,11 @@ private fun <T : ReorderableListItem> computeSortOrder(item: T, items: List<T>):
     val secretIndex = items.indexOfFirst { it.key == item.key }
     val sortOrderOfPrev = items.getOrNull(secretIndex - 1)?.sortOrder ?: 0
     val sortOrderOfNext = items.getOrNull(secretIndex + 1)?.sortOrder ?: Long.MAX_VALUE
-    return  sortOrderOfPrev / 2 + sortOrderOfNext / 2
+    val midpoint = sortOrderOfPrev + (sortOrderOfNext - sortOrderOfPrev) / 2
+    if (midpoint == sortOrderOfPrev || midpoint == sortOrderOfNext) {
+        return sortOrderOfPrev + 1
+    }
+    return midpoint
 }
 
 private fun <T : ReorderableListItem> shouldReindexSecrets(

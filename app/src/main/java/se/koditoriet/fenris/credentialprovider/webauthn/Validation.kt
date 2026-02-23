@@ -17,7 +17,9 @@ fun originIsValid(callingAppInfo: CallingAppInfo, rpId: String): Boolean {
     }
 
     if (origin.startsWith("android:apk-key-hash:")) {
-        Log.e(TAG, "Android app origins are not supported yet")
+        // TODO: Implement Digital Asset Links verification for Android app origins
+        // See: https://developer.android.com/training/sign-in/passkeys#verify-origin
+        Log.w(TAG, "Android app origin validation not yet implemented — rejecting")
         return false
     }
 

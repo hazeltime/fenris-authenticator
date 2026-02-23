@@ -44,12 +44,25 @@ class BackupSeed(private val secret: ByteArray) {
     /** Redact seed material so accidental logging cannot leak it. */
     override fun toString(): String = "BackupSeed(redacted)"
 
+    /**
+     * Derives a key using HKDF-SHA256 (RFC 5869) with a zero-byte salt.
+     *
+     * Extract: PRK = HMAC-SHA256(salt=zeros, IKM=secret)
+     * Expand:  OKM = HMAC-SHA256(PRK, info=domain || 0x01)
+     *
+     * This produces a single 256-bit output block, which is sufficient
+     * for our AES-256 key requirements.
+     */
     private fun deriveKey(domain: String): ByteArray {
+        // HKDF-Extract: PRK = HMAC-SHA256(salt, IKM)
         val prk = HmacContext.create(ByteArray(BACKUP_KEY_SIZE), HmacAlgorithm.SHA256).run {
             hmac(secret)
         }
+        // HKDF-Expand: OKM = HMAC-SHA256(PRK, info || 0x01)
         return HmacContext.create(prk, HmacAlgorithm.SHA256).run {
             hmac(domain.toByteArray() + byteArrayOf(1))
+        }.also {
+            prk.fill(0)
         }
     }
 

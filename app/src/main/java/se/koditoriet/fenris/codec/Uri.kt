@@ -18,12 +18,10 @@ val Uri.totpSecret: String
     get() = queryParameter("secret")
 
 val Uri.totpDigits: Int
-    get() = queryParameter("digits")
-        .toIntOrNull() ?: throw IllegalArgumentException("query parameter 'digits' is not an integer")
+    get() = getQueryParameter("digits")?.toIntOrNull() ?: 6
 
 val Uri.totpPeriod: Int
-    get() = queryParameter("period")
-        .toIntOrNull() ?: throw IllegalArgumentException("query parameter 'period' is not an integer")
+    get() = getQueryParameter("period")?.toIntOrNull() ?: 30
 
 val Uri.totpAlgorithm: String
     get() = queryParameter("algorithm")

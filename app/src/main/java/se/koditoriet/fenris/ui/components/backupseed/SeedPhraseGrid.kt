@@ -22,6 +22,9 @@ import se.koditoriet.fenris.ui.theme.SPACING_S
 import se.koditoriet.fenris.ui.theme.SPACING_XL
 import se.koditoriet.fenris.ui.theme.SPACING_XS
 
+// TODO(UX-24): Grid is hardcoded to 3 columns. Consider using
+// LazyVerticalGrid with GridCells.Adaptive(minSize = 100.dp)
+// to handle different screen sizes and font scales gracefully.
 @Composable
 fun SeedPhraseGrid(
     mnemonic: List<String>,

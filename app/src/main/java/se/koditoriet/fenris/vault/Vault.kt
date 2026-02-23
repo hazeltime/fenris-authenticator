@@ -568,6 +568,9 @@ class Vault(
             }
         }
 
+    // TODO(SEC-13): Backup keys are stored with requiresAuthentication=false, allowing
+    // any code with app-level access to encrypt/decrypt backups without user interaction.
+    // Consider requiring authentication for backup key operations.
     private fun createBackupKey(
         keyMaterial: ByteArray,
         keyIdentifier: KeyIdentifier,

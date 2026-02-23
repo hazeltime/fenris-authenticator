@@ -72,6 +72,8 @@ fun ManagePasskeysScreen() {
             .thenBy { it.passkey.rpId.lowercase() }
             .thenBy { it.passkey.userName.lowercase() }
 
+        // TODO(UX-13): Add empty state illustration and text (e.g., "No passkeys yet.")
+        //  when the list is empty.
         ReorderableList(
             padding = padding,
             filter = filter,

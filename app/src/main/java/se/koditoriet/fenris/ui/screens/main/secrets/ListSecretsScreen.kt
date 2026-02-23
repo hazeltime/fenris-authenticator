@@ -103,6 +103,8 @@ fun ListSecretsScreen(
         val comparator = compareBy<TotpSecretListItem> { it.totpSecret.issuer.lowercase() }
             .thenBy { it.totpSecret.account?.lowercase() }
 
+        // TODO(UX-13): Add empty state illustration and text (e.g., "No secrets yet.
+        //  Tap + to add your first TOTP secret.") when the list is empty.
         ReorderableList(
             padding = padding,
             filter = filter,

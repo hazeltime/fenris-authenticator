@@ -23,6 +23,15 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- TODO(UX-03): Add otpauth:// deep link intent-filter to allow
+                 importing TOTP secrets directly from other apps or browsers.
+                 <intent-filter>
+                     <action android:name="android.intent.action.VIEW" />
+                     <category android:name="android.intent.category.DEFAULT" />
+                     <category android:name="android.intent.category.BROWSABLE" />
+                     <data android:scheme="otpauth" android:host="totp" />
+                 </intent-filter>
+            -->
         </activity>
 
         <activity

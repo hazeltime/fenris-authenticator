@@ -23,7 +23,9 @@ fun originIsValid(callingAppInfo: CallingAppInfo, rpId: String): Boolean {
 
     val originUri = origin.toUri()
 
-    if (originUri.scheme != "https" && originUri.host != "localhost") {
+    val isHttps = originUri.scheme == "https"
+    val isLocalhost = originUri.host == "localhost"
+    if (!isHttps && !isLocalhost) {
         Log.e(TAG, "Bad origin URI scheme (must be https): ${originUri.scheme}")
         return false
     }

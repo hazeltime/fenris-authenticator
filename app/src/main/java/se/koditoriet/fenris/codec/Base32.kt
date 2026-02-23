@@ -7,6 +7,7 @@ fun base32Decode(base32: CharArray): ByteArray {
     for (c in base32) {
         val bits = when (c) {
             in 'A' .. 'Z' -> c - 'A'
+            in 'a' .. 'z' -> c - 'a'
             in '2' .. '7' -> c - ('2' - 26)
             '=' -> break
             else -> throw IllegalArgumentException("invalid base32 string")

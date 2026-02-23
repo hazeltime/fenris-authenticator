@@ -23,9 +23,12 @@ abstract class VaultRepository : RoomDatabase() {
     companion object {
         fun open(ctx: Context, path: String, dbKey: ByteArray): VaultRepository {
             val supportFactory = SupportOpenHelperFactory(dbKey)
+            // TODO(BUG-03): Add proper Room migrations for any future schema changes.
+            // Do NOT use fallbackToDestructiveMigration() — it silently deletes all
+            // TOTP secrets and passkeys on version mismatch, which is unacceptable
+            // for an authenticator app storing irreplaceable credentials.
             return Room.databaseBuilder(ctx, VaultRepository::class.java, path).apply {
                 openHelperFactory(supportFactory)
-                fallbackToDestructiveMigration()
             }.build()
         }
     }

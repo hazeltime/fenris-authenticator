@@ -106,7 +106,7 @@ inline fun <reified T : TotpSecretFormResult> TotpSecretForm(
                 onValueChange = { issuer = it },
                 label = { Text(formStrings.issuer) },
                 isError = issuer.isBlank(),
-                supportingText = if (issuer.isBlank()) {{ Text(formStrings.errorIssuerRequired) }} else null,
+                supportingText = if (issuer.isBlank()) { { Text(formStrings.errorIssuerRequired) } } else null,
                 singleLine = true,
             )
             OutlinedTextField(
@@ -181,7 +181,7 @@ fun SecretDataPartialForm(
         onValueChange = { onChange(secretDataFormState.copy(secret = it.trim())) },
         label = { Text(screenStrings.secret) },
         isError = !secretDataFormState.secretIsValid,
-        supportingText = if (!secretDataFormState.secretIsValid) {{ Text(screenStrings.errorSecretInvalid) }} else null,
+        supportingText = if (!secretDataFormState.secretIsValid) { { Text(screenStrings.errorSecretInvalid) } } else null,
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
@@ -203,7 +203,7 @@ fun SecretDataPartialForm(
                 label = { Text(screenStrings.digits) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError = !secretDataFormState.digitsIsValid,
-                supportingText = if (!secretDataFormState.digitsIsValid) {{ Text(screenStrings.errorDigitsInvalid) }} else null,
+                supportingText = if (!secretDataFormState.digitsIsValid) { { Text(screenStrings.errorDigitsInvalid) } } else null,
                 singleLine = true,
             )
             OutlinedTextField(
@@ -213,7 +213,7 @@ fun SecretDataPartialForm(
                 label = { Text(screenStrings.period) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError = !secretDataFormState.periodIsValid,
-                supportingText = if (!secretDataFormState.periodIsValid) {{ Text(screenStrings.errorPeriodInvalid) }} else null,
+                supportingText = if (!secretDataFormState.periodIsValid) { { Text(screenStrings.errorPeriodInvalid) } } else null,
                 singleLine = true,
             )
             Dropdown<TotpAlgorithm>(

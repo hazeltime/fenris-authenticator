@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import se.koditoriet.fenris.AppStrings
@@ -49,6 +50,7 @@ import se.koditoriet.fenris.ui.theme.PADDING_M
 import se.koditoriet.fenris.ui.theme.PADDING_S
 import se.koditoriet.fenris.ui.theme.SECRET_FONT_SIZE
 import se.koditoriet.fenris.vault.TotpSecret
+import java.util.Locale
 import kotlin.time.Clock
 
 class TotpSecretListItem(
@@ -81,11 +83,13 @@ class TotpSecretListItem(
     }
 
     override fun filterPredicate(filter: String): Boolean =
-        filter in totpSecret.issuer.lowercase() || filter in (totpSecret.account?.lowercase() ?: "")
+        filter in totpSecret.issuer.lowercase(Locale.ROOT) || filter in (totpSecret.account?.lowercase(Locale.ROOT) ?: "")
 
     override fun onUpdateSortOrder(sortOrder: Long) {
         onUpdateSecret(totpSecret.copy(sortOrder = sortOrder))
     }
+
+    private var clipboardClearJob: Job? = null
 
     override fun onClick() {
         when (viewState) {
@@ -96,21 +100,24 @@ class TotpSecretListItem(
                     viewState = ListRowViewState.CodeVisible(codes)
                 }
             }
-            is ListRowViewState.CodeVisible -> environment.scope.launch {
-                val clipData = ClipData.newPlainText("", totpCode)
-                clipData.description.extras = PersistableBundle().apply {
-                    putBoolean("android.content.extra.IS_SENSITIVE", true)
+            is ListRowViewState.CodeVisible -> {
+                clipboardClearJob?.cancel()
+                clipboardClearJob = environment.scope.launch {
+                    val clipData = ClipData.newPlainText("", totpCode)
+                    clipData.description.extras = PersistableBundle().apply {
+                        putBoolean("android.content.extra.IS_SENSITIVE", true)
+                    }
+                    val clipEntry = ClipEntry(clipData)
+                    environment.clipboard.setClipEntry(clipEntry)
+                    environment.view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+
+                    codeRecentlyCopied = true
+                    delay(1000)
+                    codeRecentlyCopied = false
+
+                    delay(29_000)
+                    environment.clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("", "")))
                 }
-                val clipEntry = ClipEntry(clipData)
-                environment.clipboard.setClipEntry(clipEntry)
-                environment.view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-
-                codeRecentlyCopied = true
-                delay(1000)
-                codeRecentlyCopied = false
-
-                delay(29_000)
-                environment.clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("", "")))
             }
         }
     }

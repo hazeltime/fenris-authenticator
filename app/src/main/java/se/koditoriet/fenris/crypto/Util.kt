@@ -54,6 +54,10 @@ class BitReader(val bytes: ByteArray, val size: Int = bytes.size * 8) {
     }
 }
 
+// TODO(MEM-03): BitWriter uses MutableList<Byte> which creates boxed Byte objects
+// and leaves discarded backing arrays in memory during list growth. Replace with
+// a pre-allocated ByteArray of known maximum size (input.length * 5 / 8 + 1) to
+// eliminate both boxing overhead and memory leak of resized arrays.
 class BitWriter {
     private var bitOffset: Int = 0
     private val bytes: MutableList<Byte> = mutableListOf()

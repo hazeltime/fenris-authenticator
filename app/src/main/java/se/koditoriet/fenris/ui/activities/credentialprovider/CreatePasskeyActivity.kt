@@ -49,6 +49,10 @@ class CreatePasskeyActivity : FragmentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+            android.view.WindowManager.LayoutParams.FLAG_SECURE
+        )
         val screenStrings = appStrings.credentialProvider
         val authFactory = BiometricPromptAuthenticator.Factory(this@CreatePasskeyActivity)
         val requestInfo = CreateRequestInfo.fromIntent(intent!!)

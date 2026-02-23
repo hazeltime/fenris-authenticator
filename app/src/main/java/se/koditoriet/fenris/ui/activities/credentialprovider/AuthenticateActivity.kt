@@ -164,8 +164,9 @@ private class GetRequestInfo(
         fun fromIntent(intent: Intent): GetRequestInfo {
             Log.d(TAG, "Extracting selected credential ID")
             val credentialId = intent
-                .getBundleExtra(CREDENTIAL_DATA)!!
-                .getString(CREDENTIAL_ID)!!
+                .getBundleExtra(CREDENTIAL_DATA)
+                ?.getString(CREDENTIAL_ID)
+                ?: throw IllegalArgumentException("Missing credential data or credential ID in intent extras")
 
             Log.i(TAG, "User requested signing with credential $credentialId")
 

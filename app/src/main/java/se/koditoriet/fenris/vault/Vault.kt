@@ -177,8 +177,8 @@ class Vault(
     suspend fun deletePasskey(credentialId: CredentialId) = withPasskeyRepository { passkeys ->
         Log.i(TAG, "Deleting passkey with credential ID $credentialId")
         val passkey = passkeys.get(credentialId)
-        cryptographer.deleteKey(passkey.keyHandle)
         passkeys.delete(credentialId)
+        cryptographer.deleteKey(passkey.keyHandle)
     }
 
     suspend fun addTotpSecret(newSecret: NewTotpSecret) = withTotpSecretRepository { secrets ->
@@ -218,8 +218,8 @@ class Vault(
     suspend fun deleteSecret(id: TotpSecret.Id) = withTotpSecretRepository { secrets ->
         Log.i(TAG, "Delete TOTP secret with id $id")
         val secret = secrets.get(id)
-        cryptographer.deleteKey(secret.keyHandle)
         secrets.delete(id)
+        cryptographer.deleteKey(secret.keyHandle)
     }
 
     suspend fun reindexSecrets() = withTotpSecretRepository { secrets ->
@@ -297,11 +297,14 @@ class Vault(
 
     fun wipe() {
         unlockState?.repository?.close()
-        cryptographer.wipeKeys()
-        if (dbFile.value.exists()) {
-            dbFile.value.delete()
+        try {
+            cryptographer.wipeKeys()
+        } finally {
+            if (dbFile.value.exists()) {
+                dbFile.value.delete()
+            }
+            _state.value = InternalState.Uninitialized
         }
-        _state.value = InternalState.Uninitialized
     }
 
     suspend fun eraseBackups(): Unit = requireUnlocked { unlockState ->

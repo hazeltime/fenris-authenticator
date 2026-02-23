@@ -11,13 +11,21 @@ d88a60b9b362391306dd8386ff1f7c995184664e8bf49bc181126cdb435264d3
 ```
 
 
+## Requirements
+* Android 12 or later (API 31+).
+* Android 14 or later (API 34+) for passkey credential provider integration.
+
 ## Features
 * **Passkeys:** get rid of usernames and passwords entirely, or use a stronger second factor.
-* **One-time codes:** for the services that don't support passkeys, Fenris acts as an OTP authenticator.
-* **Hardware-backed security:** passkeys and OTP secrets are stored in secure hardware, and are
+  Fenris integrates with Android's Credential Provider API, so passkeys work seamlessly across apps
+  and browsers.
+* **TOTP codes:** for services that don't support passkeys, Fenris generates standard
+  time-based one-time passwords (RFC 6238) with SHA-1, SHA-256, or SHA-512.
+  Add accounts by scanning a QR code or entering the secret manually.
+* **Hardware-backed security:** passkeys and TOTP secrets are stored in secure hardware, and are
     literally impossible to steal from your device.
 * **Strong encrypted backups:** backups — if enabled — are protected by a random seed, stored
-    offline as a QR code or a BIP-39 seed phrase.
+    offline as a QR code or a 24-word mnemonic phrase.
 * **Degoogled:** Fenris does not depend on Google Play Services, and is developed and tested
     on [GrapheneOS](https://grapheneos.org).
 * **Offline:** Fenris does not collect any metrics or user data, or depend on proprietary servers —
@@ -77,11 +85,11 @@ Credentials are instead stored in SE/TEE, and always require user authentication
 
 ### Backups
 If backups are enabled, Fenris stores a copy of each credential in the account database.
-This copy is encrypted using a 256 bit AES key derived from a 256 bit backup seed.
+This copy is encrypted using a 256 bit AES key derived from a 256 bit backup seed via HKDF-SHA256.
 The key is stored in SE/TEE, and only approved for encryption use — crucially *not* for decryption.
 
 The backup seed is randomly generated on first start, and displayed to the user in the form of
-either a BIP-39 seed phrase or a QR code for printing. The user is strongly encouraged to
+either a 24-word mnemonic phrase or a QR code for printing. The user is strongly encouraged to
 store their seed phrase offline, and advised that storing it on the same device where Fenris is
 installed is a terrible idea.
 
@@ -94,7 +102,7 @@ explicit user request.
 
 ### Authentication
 Fenris requires user authentication using either class 3 biometrics (e.g. fingerprint) or device
-credential (e.g. PIN/password) to use any credential and to unlock the account database.
+credential (e.g. PIN, pattern, or password) to use any credential and to unlock the account database.
 
 For symmetric credentials (i.e. OTP secrets and the database KEK), the key remains unlocked
 for five seconds following authentication, whereas asymmetric credentials (i.e. passkeys)
@@ -117,9 +125,27 @@ reading one-time codes, Fenris takes the following precautions:
 
 * One-time codes are not displayed or generated until the user selects a specific account and
   authenticates.
-* Screenshots and screen recording are disabled for Fenris.
+* Screenshots and screen recording are blocked by default (via `FLAG_SECURE`), though this can
+  be disabled in settings.
+* Copied codes are marked as sensitive and automatically cleared from the clipboard after
+  30 seconds.
 * Secrets can be configured to be hidden from screen readers, but default to visible to avoid
   excluding visually impaired users.
+
+
+## Building
+Fenris is built with Gradle. You need JDK 21.
+
+```bash
+# Debug build
+./gradlew assembleDebug
+
+# Unit tests
+./gradlew testDebugUnitTest
+
+# Lint
+./gradlew lintDebug
+```
 
 
 ## Contributing

@@ -50,6 +50,9 @@ class BiometricPromptAuthenticator(
         BiometricPrompt.PromptInfo.Builder().apply {
             setTitle(reason)
             setSubtitle(subtitle)
+            // TODO(SEC-11): DEVICE_CREDENTIAL allows PIN/pattern unlock which is weaker than
+            // BIOMETRIC_STRONG. Consider adding a setting to let security-conscious users
+            // require biometric-only authentication, with a warning about device support.
             setAllowedAuthenticators(
                 BiometricManager.Authenticators.BIOMETRIC_STRONG or
                 BiometricManager.Authenticators.DEVICE_CREDENTIAL

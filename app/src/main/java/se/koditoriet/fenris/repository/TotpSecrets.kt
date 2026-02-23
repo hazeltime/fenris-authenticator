@@ -36,6 +36,9 @@ interface TotpSecrets {
             WHERE ordered.id = totp_secrets.id
         );
     """)
+    // TODO(ARCH-07): Full-table reindex on every sort order change is O(n).
+    // Consider fractional indexing (e.g., Lexorank strings) or a doubly-linked
+    // list approach that only touches the moved item's neighbors.
     suspend fun reindexSortOrder()
 
     @Query("DELETE FROM totp_secrets WHERE id = :id")

@@ -17,6 +17,9 @@ import se.koditoriet.fenris.vault.Vault
 /**
  * Shared functionality for all view models.
  */
+// TODO(ARCH-02): Decouple ViewModels from direct Android framework dependencies
+// (e.g., Application context). Use injected interfaces for system services so
+// ViewModels become testable without Android instrumentation.
 abstract class ViewModelBase(private val app: Application) : AndroidViewModel(app) {
     protected val vault: SynchronizedVault by lazy { (app as FenrisApp).vault }
     protected val configDatastore: DataStore<Config> by lazy { (app as FenrisApp).config }

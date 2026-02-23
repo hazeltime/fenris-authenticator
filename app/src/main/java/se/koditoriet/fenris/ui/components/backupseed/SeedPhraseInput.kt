@@ -55,6 +55,7 @@ fun SeedPhraseInput(
 ) {
     val screenStrings = appStrings.seedInputScreen
     var invalidBackupSeedPhrase by remember { mutableStateOf(false) }
+    var hasAttempted by remember { mutableStateOf(false) }
     val focusRequesters = remember { List(wordCount) { FocusRequester() } }
     val words = remember { mutableStateListOf(*Array(wordCount) { "" }) }
 
@@ -88,6 +89,7 @@ fun SeedPhraseInput(
                         words = words[index],
                         isLastWord = index == wordCount - 1,
                         seedWords = seedWords,
+                        hasAttempted = hasAttempted,
                         onValueChange = { words[index] = it },
                         onNextWord = { focusRequesters[index + 1].requestFocus() },
                         focusRequester = focusRequesters[index],
@@ -107,8 +109,9 @@ fun SeedPhraseInput(
         val seedPhraseIsValid = words.all { it in seedWords }
         MainButton(
             text = confirmButtonText,
-            enabled = seedPhraseIsValid,
+            enabled = !hasAttempted || seedPhraseIsValid,
             onClick = {
+                hasAttempted = true
                 if (seedPhraseIsValid) {
                     try {
                         onContinue(BackupSeed.fromMnemonic(words))
@@ -132,6 +135,7 @@ private fun SeedWordInput(
     words: String,
     isLastWord: Boolean,
     seedWords: Set<String>,
+    hasAttempted: Boolean,
     onValueChange: (String) -> Unit,
     onNextWord: () -> Unit,
     focusRequester: FocusRequester,
@@ -159,7 +163,8 @@ private fun SeedWordInput(
                 .focusRequester(focusRequester)
                 .fillMaxWidth(),
             singleLine = true,
-            isError = words.isNotBlank() && words !in seedWords,
+            isError = (words.isNotBlank() && words !in seedWords) ||
+                (hasAttempted && words.isBlank()),
             textStyle = LocalTextStyle.current.copy(
                 fontFamily = FontFamily.Monospace
             ),

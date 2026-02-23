@@ -33,6 +33,10 @@ private const val TAG = "FenrisApp"
 
 private val idleTimeoutScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+// TODO(ARCH-01): Migrate from manual singleton creation to a proper dependency
+// injection framework (e.g., Hilt/Dagger or manual constructor injection with
+// a Composition Local provider). Current pattern of creating instances in
+// FenrisApp and passing through view model factories creates tight coupling.
 class FenrisApp : Application() {
     val vault: SynchronizedVault
     val config: DataStore<Config> by dataStore("config", ConfigSerializer)
@@ -111,6 +115,11 @@ class FenrisApp : Application() {
     }
 }
 
+// TODO(ARCH-08): Replace AlarmManager-based vault timeout with
+// ProcessLifecycleOwner + coroutine delay. AlarmManager is subject to
+// Doze mode restrictions and battery optimization, making it unreliable
+// for security-critical timeout operations. ProcessLifecycleOwner
+// accurately detects app background/foreground transitions.
 /**
  * Sets up an action to be executed when a timeout expires.
  * The action can be canceled up until the point where the timeout expires. After that, it's unstoppable.

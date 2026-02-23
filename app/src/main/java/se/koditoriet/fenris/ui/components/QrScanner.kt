@@ -1,3 +1,7 @@
+// TODO(ARCH-03): Migrate from direct Camera2 API to AndroidX CameraX.
+// CameraX provides a simpler lifecycle-aware API, reduces boilerplate,
+// handles device-specific quirks automatically, and integrates well
+// with ML Kit for QR barcode scanning.
 package se.koditoriet.fenris.ui.components
 
 import android.Manifest.permission.CAMERA

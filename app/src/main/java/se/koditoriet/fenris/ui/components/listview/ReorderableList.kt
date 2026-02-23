@@ -95,6 +95,7 @@ fun <T : ReorderableListItem> ReorderableList(
         LazyColumn(
             state = lazyListState,
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 80.dp),
         ) {
             val filterQuery = filter ?: ""
             val filteredSecrets = when (filterQuery.isNotBlank()) {

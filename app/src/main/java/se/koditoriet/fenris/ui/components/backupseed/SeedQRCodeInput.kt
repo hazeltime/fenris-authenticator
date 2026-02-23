@@ -36,7 +36,9 @@ fun SeedQRCodeInput(
                     onContinue(BackupSeed.fromUri(it.toUri()))
                 } catch (e: Exception) {
                     invalidBackupSeedQR = true
-                    Log.w(TAG, "Scanned QR code is not a valid backup seed", e)
+                    // SEC-07: Log only the failure, not the exception detail which may
+                    // contain the scanned URI with seed material.
+                    Log.w(TAG, "Scanned QR code is not a valid backup seed")
                 }
             }
         }

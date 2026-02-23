@@ -31,8 +31,18 @@ class BackupSeed(private val secret: ByteArray) {
     fun toBase64Url(): Base64Url =
         secret.toBase64Url()
 
+    /**
+     * Encodes the seed as a `fenris://seed/<base64url>` URI for QR code generation.
+     *
+     * SECURITY: The returned URI contains the raw seed material. It must only be used
+     * transiently (e.g. QR bitmap encoding) and must never be logged, persisted, or
+     * passed through an Android Intent.
+     */
     fun toUri(): Uri =
         "fenris://seed/${toBase64Url().string}".toUri()
+
+    /** Redact seed material so accidental logging cannot leak it. */
+    override fun toString(): String = "BackupSeed(redacted)"
 
     private fun deriveKey(domain: String): ByteArray {
         val prk = HmacContext.create(ByteArray(BACKUP_KEY_SIZE), HmacAlgorithm.SHA256).run {

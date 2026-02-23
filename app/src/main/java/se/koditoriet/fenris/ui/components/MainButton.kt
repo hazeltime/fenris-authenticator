@@ -3,6 +3,7 @@ package se.koditoriet.fenris.ui.components
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,6 +29,7 @@ fun BoxScope.MainButton(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .imePadding()
             .align(Alignment.BottomCenter)
     ) {
         Button(

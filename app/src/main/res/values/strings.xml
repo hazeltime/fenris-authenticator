@@ -100,6 +100,7 @@
     <string name="secrets_generate_one_time_code">Generate one-time code</string>
     <string name="secrets_copy_one_time_code">"Copy code to clipboard"</string>
     <string name="secrets_copied_one_time_code">"Code copied to clipboard"</string>
+    <string name="secrets_tap_to_copy">Tap to copy</string>
 
     <string name="secrets_edit_new_sheet_heading">Add Secret</string>
     <string name="secrets_edit_new_sheet_description">Customize details before finishing up.</string>

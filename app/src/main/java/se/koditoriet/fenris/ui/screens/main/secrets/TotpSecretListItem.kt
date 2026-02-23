@@ -152,6 +152,13 @@ class TotpSecretListItem(
                 TOTPCode()
                 CopyIcon()
             }
+            if (viewState is ListRowViewState.CodeVisible && !codeRecentlyCopied) {
+                Text(
+                    text = environment.screenStrings.tapToCopy,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
 
         if (viewState is ListRowViewState.CodeVisible) {

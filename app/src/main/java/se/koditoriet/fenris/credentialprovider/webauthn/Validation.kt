@@ -39,7 +39,10 @@ fun originIsValid(callingAppInfo: CallingAppInfo, rpId: String): Boolean {
 }
 
 fun rpIsValid(rpId: String): Boolean {
-    return !rpId.startsWith(".")
+    if (rpId.isBlank()) return false
+    if (rpId.startsWith(".") || rpId.endsWith(".")) return false
+    if (!rpId.contains(".")) return false
+    return true
 }
 
 fun appInfoToOrigin(callingAppInfo: CallingAppInfo): String {

@@ -179,7 +179,8 @@ private class GetRequestInfo(
             return GetRequestInfo(
                 credentialId = CredentialId.fromString(credentialId),
                 callingAppInfo = request.callingAppInfo,
-                clientDataHash = credentialOption.clientDataHash!!,
+                clientDataHash = credentialOption.clientDataHash
+                    ?: throw IllegalArgumentException("Missing clientDataHash in credential request"),
                 requestJson = PublicKeyCredentialRequestOptions.fromJSON(credentialOption.requestJson),
             )
         }

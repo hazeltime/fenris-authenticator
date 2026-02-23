@@ -25,6 +25,7 @@ abstract class VaultRepository : RoomDatabase() {
             val supportFactory = SupportOpenHelperFactory(dbKey)
             return Room.databaseBuilder(ctx, VaultRepository::class.java, path).apply {
                 openHelperFactory(supportFactory)
+                fallbackToDestructiveMigration()
             }.build()
         }
     }

@@ -1,6 +1,7 @@
 package se.koditoriet.fenris.ui.screens.main.secrets
 
 import android.content.ClipData
+import android.os.PersistableBundle
 import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.compose.foundation.layout.Column
@@ -96,13 +97,20 @@ class TotpSecretListItem(
                 }
             }
             is ListRowViewState.CodeVisible -> environment.scope.launch {
-                val clipEntry = ClipEntry(ClipData.newPlainText("", totpCode))
+                val clipData = ClipData.newPlainText("", totpCode)
+                clipData.description.extras = PersistableBundle().apply {
+                    putBoolean("android.content.extra.IS_SENSITIVE", true)
+                }
+                val clipEntry = ClipEntry(clipData)
                 environment.clipboard.setClipEntry(clipEntry)
                 environment.view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
 
                 codeRecentlyCopied = true
                 delay(1000)
                 codeRecentlyCopied = false
+
+                delay(29_000)
+                environment.clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("", "")))
             }
         }
     }

@@ -37,6 +37,7 @@ private fun encodeTime(time: Instant, timeStep: Int): ByteArray {
 }
 
 private fun codeToString(hmac: ByteArray, digits: Int): String {
+    require(digits in 1..9) { "TOTP digits must be between 1 and 9, got $digits" }
     val offset = (hmac.last() and 0xf).toInt()
     var code = (hmac[offset].toInt() and 0x7f).shl(24)
     code = code or (hmac[offset + 1].toInt() and 0xff).shl(16)

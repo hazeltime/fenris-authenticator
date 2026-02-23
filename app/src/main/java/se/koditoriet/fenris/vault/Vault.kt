@@ -400,8 +400,12 @@ class Vault(
             )
             Log.i(TAG, "Exporting ${vaultExport.secrets.size} secrets and ${vaultExport.passkeys.size} passkeys")
             val vaultExportBytes = vaultExport.encode()
-            cryptographer.withEncryptionKey(DummyAuthenticator, backupKeys.metadataBackupKey) {
-                encrypt(vaultExportBytes)
+            try {
+                cryptographer.withEncryptionKey(DummyAuthenticator, backupKeys.metadataBackupKey) {
+                    encrypt(vaultExportBytes)
+                }
+            } finally {
+                vaultExportBytes.fill(0)
             }
         }
     }

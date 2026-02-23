@@ -260,6 +260,8 @@ private fun SecretVisibility.TrailingIcon(onClick: () -> Unit) {
     }
 }
 
+// TODO(SEC-04): TOTP secrets are held as String objects which cannot be securely zeroed.
+// Consider migrating the entire secret pipeline to use CharArray or ByteArray.
 data class SecretDataFormState(
     val secret: String = "",
     val digits: String = "6",

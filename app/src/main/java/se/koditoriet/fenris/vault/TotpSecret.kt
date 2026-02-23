@@ -68,6 +68,8 @@ data class NewTotpSecret(
     )
 
     companion object {
+        // TODO(SEC-04): The URI secret is extracted as a String before conversion to CharArray.
+        // Consider accepting CharArray directly to avoid retaining secrets in immutable Strings.
         fun fromUri(uri: String): NewTotpSecret {
             val parsedUri = uri.toUri()
             require(parsedUri.scheme == "otpauth")

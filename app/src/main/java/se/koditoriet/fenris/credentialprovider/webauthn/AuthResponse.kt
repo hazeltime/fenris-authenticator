@@ -21,6 +21,10 @@ class AuthResponse(
         val md = MessageDigest.getInstance("SHA-256")
         val rpHash = md.digest(rpId.toByteArray(Charsets.UTF_8))
         val flags = byteArrayOf(flags.toByte())
+        // TODO(SEC-10): Sign counter is hardcoded to zero. Per WebAuthn spec,
+        // authenticators should maintain a per-credential monotonic counter to
+        // help relying parties detect cloned credentials. Store counter in Room
+        // DB and increment on each assertion.
         val signCount = ByteArray(4)
         rpHash + flags + signCount
     }

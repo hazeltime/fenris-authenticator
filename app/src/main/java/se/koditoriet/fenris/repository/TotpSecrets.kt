@@ -30,7 +30,7 @@ interface TotpSecrets {
             FROM (
                 SELECT
                     id,
-                    ROW_NUMBER() OVER (ORDER BY sortOrder) AS rn
+                    ROW_NUMBER() OVER (ORDER BY sortOrder, id) AS rn
                 FROM totp_secrets
             ) AS ordered
             WHERE ordered.id = totp_secrets.id

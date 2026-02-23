@@ -1,6 +1,7 @@
 package se.koditoriet.fenris.ui.screens.main.secrets
 
 import android.net.Uri
+import java.util.Locale
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -100,8 +101,8 @@ fun ListSecretsScreen(
             }
         }
     ) { padding ->
-        val comparator = compareBy<TotpSecretListItem> { it.totpSecret.issuer.lowercase() }
-            .thenBy { it.totpSecret.account?.lowercase() }
+        val comparator = compareBy<TotpSecretListItem> { it.totpSecret.issuer.lowercase(Locale.ROOT) }
+            .thenBy { it.totpSecret.account?.lowercase(Locale.ROOT) }
 
         // TODO(UX-13): Add empty state illustration and text (e.g., "No secrets yet.
         //  Tap + to add your first TOTP secret.") when the list is empty.

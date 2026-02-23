@@ -1,13 +1,20 @@
 package se.koditoriet.fenris.ui.components
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -68,12 +75,23 @@ fun RequiresPermission(
                 .padding(PADDING_L)
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Text(
-                    text = permissionsRequiredMessage,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primaryHint,
-                    textAlign = TextAlign.Center,
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = permissionsRequiredMessage,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primaryHint,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(PADDING_L))
+                    Button(onClick = {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", ctx.packageName, null)
+                        }
+                        ctx.startActivity(intent)
+                    }) {
+                        Text("Open Settings")
+                    }
+                }
             }
         }
     }

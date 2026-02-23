@@ -40,6 +40,10 @@ class BiometricPromptAuthenticator(
                 }
             }
         }
+        // TODO(BUG-15): Replace exception-based control flow with a sealed Result type
+        // (e.g., sealed class AuthResult { data class Success(...); data class Failure(...); object Cancelled })
+        // Exceptions should be reserved for truly exceptional conditions, not expected
+        // user interactions like cancellation or biometric failure.
         when (result) {
             AuthenticationResult.Failure -> throw AuthenticationFailedException("user canceled authentication")
             is AuthenticationResult.Success -> return result.cryptoObject

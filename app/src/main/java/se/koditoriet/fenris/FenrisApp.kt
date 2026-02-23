@@ -138,7 +138,7 @@ class TimeoutJob(
         }
 
         timeoutPendingIntent = pendingIntent
-        alarmManager.set(
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.ELAPSED_REALTIME,
             SystemClock.elapsedRealtime() + timeout.inWholeMilliseconds,
             pendingIntent,

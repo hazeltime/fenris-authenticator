@@ -41,6 +41,9 @@ fun FragmentActivity.SetupScreen() {
 
         ViewState.ShowBackupSeed -> {
             val seed = remember { BackupSeed.generate() }
+            // TODO(SEC-05): Add seed phrase verification step before continuing.
+            // Users should be required to enter 3-4 randomly selected words from
+            // their seed phrase to confirm they have written it down.
             BackupSeedScreen(
                 backupSeed = seed,
                 onContinue = onIOThread {

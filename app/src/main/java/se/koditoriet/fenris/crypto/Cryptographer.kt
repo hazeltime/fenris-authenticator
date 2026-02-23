@@ -27,6 +27,8 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.SecretKeySpec
 import javax.security.auth.DestroyFailedException
 
+// TODO(SEC-15): 5-second authentication window allows unlimited key operations
+// after a single biometric prompt. Consider reducing or using per-operation auth.
 private const val KEY_AUTHENTICATION_LIFETIME: Int = 5
 private const val TAG = "Cryptographer"
 
@@ -254,6 +256,9 @@ class Cryptographer(
             "Generating EC key pair with identifier '${preliminaryHandle.identifier}'" +
             " and algorithm ${preliminaryHandle.algorithm}",
         )
+        // TODO(SEC-16): EC key pairs are generated in software memory before being imported
+        // into the Keystore, briefly exposing private key material in RAM. Consider using
+        // KeyPairGenerator.getInstance("EC", "AndroidKeyStore") to generate directly in hardware.
         val keyPair = KeyPairGenerator.getInstance(preliminaryHandle.algorithm.secretKeySpecName).run {
             initialize(ECGenParameterSpec(preliminaryHandle.algorithm.curve))
             generateKeyPair()
